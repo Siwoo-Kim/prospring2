@@ -6,7 +6,9 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,6 +52,9 @@ public class Singer implements Serializable{
     private LocalDate birthDate;
     @OneToMany(mappedBy = "singer",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<Album> albums = new HashSet<>();
+
+    @Transient
+    private URL personalSite;
 
     @ManyToMany
     @JoinTable(name = "singer_instrument",

@@ -3,6 +3,7 @@ package com.siwoo.application.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 @Getter @Setter @ToString(callSuper = true)
 @Entity @EntityListeners(AuditingEntityListener.class)
+@Audited
 @Table(name="singer_audit")
 public class SingerAudit extends AuditableEntity<SingerAudit> implements Serializable {
 

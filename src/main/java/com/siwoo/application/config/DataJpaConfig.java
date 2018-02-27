@@ -2,10 +2,7 @@ package com.siwoo.application.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -21,11 +18,8 @@ import java.util.Properties;
 
 @Slf4j
 @Configuration
-@EnableTransactionManagement(proxyTargetClass = true)
-@ComponentScan(basePackages = "com.siwoo.application",excludeFilters= @ComponentScan.Filter(type = FilterType.ANNOTATION,value = Configuration.class))
-@EnableJpaAuditing(auditorAwareRef = "auditorAwareBean")
-@EnableJpaRepositories(basePackages= "com.siwoo.application.repository")
-public class SpringDataJpaConfig {
+@EnableJpaRepositories("com.siwoo.application.repository")
+public class DataJpaConfig {
 
     @Bean
     public DataSource dataSource(){
@@ -42,11 +36,6 @@ public class SpringDataJpaConfig {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(){
-        return new JpaTransactionManager(entityManagerFactory());
-    }
-
-    @Bean
     public Properties hibernateProperties() {
         Properties hibernateProp = new Properties();
         hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
@@ -56,17 +45,6 @@ public class SpringDataJpaConfig {
         hibernateProp.put("hibernate.max_fetch_depth", 3);
         hibernateProp.put("hibernate.jdbc.batch_size", 10);
         hibernateProp.put("hibernate.jdbc.fetch_size", 50);
-        //Properties for Hibernate Envers
-        hibernateProp.put("org.hibernate.envers.audit_table_suffix", "_H");
-        hibernateProp.put("org.hibernate.envers.revision_field_name", "AUDIT_REVISION");
-        hibernateProp.put("org.hibernate.envers.revision_type_field_name", "ACTION_TYPE");
-        hibernateProp.put("org.hibernate.envers.audit_strategy", "org.hibernate.envers.strategy.ValidityAuditStrategy");
-        hibernateProp.put("org.hibernate.envers.audit_strategy_validity_end_rev_field_name", "AUDIT_REVISION_END");
-        hibernateProp.put("org.hibernate.envers.audit_strategy_validity_store_revend_timestamp", "True");
-        hibernateProp.put("org.hibernate.envers.audit_strategy_validity_revend_timestamp_field_name",
-                "AUDIT_REVISION_END_TS");
-
-
         return hibernateProp;
     }
 
@@ -81,6 +59,5 @@ public class SpringDataJpaConfig {
         factoryBean.afterPropertiesSet();
         return factoryBean.getNativeEntityManagerFactory();
     }
-
 
 }
